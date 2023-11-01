@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Midground
+  - Water
+  - UI
+  - Ground
+  - Obstycles
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Ground
+    uniqueID: 2410664979
+    locked: 0
+  - name: Obstycles
+    uniqueID: 2989095597
+    locked: 0
+  - name: Character
+    uniqueID: 1054634787
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0

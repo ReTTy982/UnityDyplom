@@ -1,0 +1,10 @@
+/Library
+/Logs
+/UserSettings
+/Temp
+/Build
+/obj
+/.vs
+/.vsconfig
+Assembly-CSharp.csproj
+Dyplom.sln
