@@ -1,88 +1,64 @@
+using System;
 using UnityEngine;
-using System.Collections;
-
-public class Grid : MonoBehaviour
-{
-	public Transform player;
-	public LayerMask unwalkableMask;
-	public Vector2 gridWorldSize;
-	public float nodeRadius;
-	Node[,] grid;
-
-	float nodeDiameter;
-	int gridSizeX, gridSizeY;
-
-	void Start()
-	{
-		nodeDiameter = nodeRadius * 2;
-		gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
-		gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
-		CreateGrid();
-	}
-
-	void CreateGrid()
-	{
-		grid = new Node[gridSizeX, gridSizeY];
-		Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y / 2;
-
-		for (int x = 0; x < gridSizeX; x++)
-		{
-			for (int y = 0; y < gridSizeY; y++)
-			{
-				Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
-
-				bool walkable = !(Physics2D.OverlapCircle(worldPoint,nodeRadius,unwalkableMask));
-				grid[x, y] = new Node(walkable, worldPoint);
-			}
-		}
-	}
-
-
-	public Node NodeFromWorldPoint(Vector3 worldPosition)
-	{
-		float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
-		float percentY = (worldPosition.y + gridWorldSize.y / 2) / gridWorldSize.y;
-
-		int x = Mathf.Clamp(Mathf.FloorToInt((worldPosition.x - transform.position.x + gridWorldSize.x / 2) / nodeDiameter), 0, gridSizeX - 1);
-		int y = Mathf.Clamp(Mathf.FloorToInt((worldPosition.y - transform.position.y + gridWorldSize.y / 2) / nodeDiameter), 0, gridSizeY - 1);
-
-	
-
-		return grid[x, y];
-	}
-
-	void OnDrawGizmos()
-	{
-		Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y,1));
-
-
-		if (grid != null)
-		{
-			Node playerNode = NodeFromWorldPoint(player.position);
-			foreach (Node n in grid)
-			{
-				Gizmos.color = (n.walkable) ? Color.white : Color.red;
-				if (playerNode == n)
-				{
-					Gizmos.color = Color.blue;
-				}
-				Gizmos.DrawCube(n.WorldPosition, Vector3.one * (nodeDiameter - .1f));
-				
-			}
-
-		}
-	}
-}
-
-public class Node
+public class Grid<TGridObject>
 {
 
-	public bool walkable;
-	public Vector3 WorldPosition { get; }
+    public int Width { get; private set; }
+    public int Height{ get; private set; }
+    private float cellSize;
+    private TGridObject[,] gridArray;
+    private Vector3 centerPosition;
+    public Grid(int width, int height, float cellSize, Vector3 centerPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject) {
+        Width = width;
+        Height = height;
+        this.cellSize = cellSize;
+        gridArray = new TGridObject[width, height];
+        this.centerPosition = centerPosition;
 
-	public Node(bool _walkable, Vector3 _worldPos)
-	{
-		walkable = _walkable;
-		WorldPosition = _worldPos;
+		for (int x = 0; x < gridArray.GetLength(0); x++)
+		{
+			for (int y = 0; y < gridArray.GetLength(1); y++)
+			{
+				gridArray[x, y] = createGridObject(this,x, y);
+			}
+		}
+
+		for (int x=0; x < gridArray.GetLength(0); x++)
+        {
+            for (int y=0; y < gridArray.GetLength(1);y++)
+            {   
+                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y),Color.red,100f);
+				Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x , y+1),Color.red,100f);
+       
+			}
+			
+		}
+		Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 100f);
+		Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 100f);
+
+	}
+
+
+
+    public TGridObject GetGridObject(int x, int y)
+    {
+		if (x >= 0 && y >= 0 && x < Width && y< Height){
+            return gridArray[x,y];
+        }
+        else
+        {
+            return default(TGridObject);
+        }
+    }
+
+    public Vector3 GetWorldPosition(int x, int y)
+    {
+        return new Vector3(x, y) * cellSize + centerPosition;
+    }
+
+    public void GetXY(Vector3 worldPosition,out int x, out int y)
+    {
+        x = Mathf.FloorToInt((worldPosition - centerPosition).x / cellSize);
+		y = Mathf.FloorToInt((worldPosition - centerPosition).y / cellSize);
 	}
 }

@@ -295,6 +295,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &284071478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 284071479}
+  - component: {fileID: 284071480}
+  m_Layer: 0
+  m_Name: RandomMap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &284071479
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284071478}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.0705805, y: 10.499281, z: -0.05642119}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &284071480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284071478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad72b763a5271ac40977149ae5d86c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  height: 200
+  width: 200
+  scale: 0.1
+  cellSize: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,8 +629,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 710f9ac06a3460d48b9fcce8729ccaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 20
-  width: 20
+  height: 200
+  width: 200
   cellSize: 1
 --- !u!4 &718819642
 Transform:
@@ -799,7 +847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd745bcc43852134f97ea343a4acd882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 20
   rb: {fileID: 1487959234}
 --- !u!50 &1487959234
 Rigidbody2D:
@@ -7773,3 +7821,4 @@ SceneRoots:
   - {fileID: 774474840}
   - {fileID: 536210898}
   - {fileID: 718819642}
+  - {fileID: 284071479}
