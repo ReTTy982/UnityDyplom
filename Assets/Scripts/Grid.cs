@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 public class Grid<TGridObject>
 {
-
+    public bool debug = false;
     public int Width { get; private set; }
     public int Height{ get; private set; }
     private float cellSize;
@@ -22,19 +22,23 @@ public class Grid<TGridObject>
 				gridArray[x, y] = createGridObject(this,x, y);
 			}
 		}
+        if (debug)
+		{
+			for (int x = 0; x < gridArray.GetLength(0); x++)
+			{
+				for (int y = 0; y < gridArray.GetLength(1); y++)
+				{
+					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.red, 100f);
+					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.red, 100f);
 
-		for (int x=0; x < gridArray.GetLength(0); x++)
-        {
-            for (int y=0; y < gridArray.GetLength(1);y++)
-            {   
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y),Color.red,100f);
-				Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x , y+1),Color.red,100f);
-       
+				}
+
 			}
-			
+			Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 100f);
+			Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 100f);
 		}
-		Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 100f);
-		Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 100f);
+		
+
 
 	}
 

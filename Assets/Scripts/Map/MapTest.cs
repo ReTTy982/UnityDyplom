@@ -10,6 +10,7 @@ public class MapTest : MonoBehaviour
 	public float scale = .1f;
 	public float cellSize;
 	private MapGrid mapGrid;
+	public float waterLevel;
 
 	void Start()
     {
@@ -18,13 +19,12 @@ public class MapTest : MonoBehaviour
 		{
 			for(int y=0; y<width; y++)
 			{
-				Debug.Log("wewnetrzne");
 				float noiseValue = Mathf.PerlinNoise(x*scale,y*scale);
 				noiseMap[x,y] = noiseValue;
 			}
 		}
 
-		mapGrid = new MapGrid(width,height,cellSize,noiseMap);
+		mapGrid = new MapGrid(width,height,cellSize,scale,waterLevel);
     }
 	private void OnDrawGizmos()
 	{
@@ -44,7 +44,7 @@ public class MapTest : MonoBehaviour
 				{
 					Gizmos.color = Color.green;
 				}
-				Gizmos.DrawCube(mapGrid.Grid.GetWorldPosition(x,y),new Vector3(cellSize,cellSize,0));
+				Gizmos.DrawCube(mapGrid.Grid.GetWorldPosition(x,y) + new Vector3(cellSize/2,cellSize/2,0),new Vector3(cellSize,cellSize,0));
 			}
 		}
 	}
