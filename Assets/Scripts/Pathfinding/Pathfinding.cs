@@ -13,10 +13,55 @@ public class Pathfinding
 	private int straight = 10;
 	private int diagonal = 14;
 
+	public static Pathfinding Instance { get; private set; } // SIngleton for single unit ??
 	public Pathfinding(int width, int height, float cellSize) 
 	{
+		Instance = this;
 		Grid = new Grid<PathNode>(width, height,cellSize,Vector3.zero,(Grid<PathNode> g, int x, int y) => new PathNode(g,x,y));
 
+	}
+
+
+	public List<Vector3> FindRandomPath(Vector3 startWorldPosition)
+	{
+		Grid.GetXY(startWorldPosition, out int startX, out int startY);
+		int endX = UnityEngine.Random.Range(0, Grid.Width);
+		int endY = UnityEngine.Random.Range(0, Grid.Height);
+		List<PathNode> path = FindPath(startX, startY, endX, endY);
+		if (path == null)
+		{
+			return null;
+		}
+		else
+		{
+			List<Vector3> vectorPath = new List<Vector3>();
+			foreach (PathNode pathNode in path)
+			{
+				vectorPath.Add(new Vector3(pathNode.x, pathNode.y) * Grid.CellSize + Vector3.one * .5f);
+			}
+			return vectorPath;
+		}
+	}
+	public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition)
+	{
+		
+		Grid.GetXY(startWorldPosition, out int startX, out int startY);
+		Grid.GetXY(endWorldPosition, out int endX, out int endY);
+		List<PathNode> path = FindPath(startX,startY,endX,endY);
+		if (path == null)
+		{
+			return null;
+		}
+		else
+		{
+			List<Vector3> vectorPath = new List<Vector3>();
+			foreach(PathNode pathNode in path) 
+			{
+				vectorPath.Add(new Vector3(pathNode.x, pathNode.y) * Grid.CellSize + Vector3.one * .5f);
+			}
+			return vectorPath;
+		}
+		
 	}
 
 	public List<PathNode> FindPath(int startX, int startY, int endX, int endY)
@@ -43,9 +88,7 @@ public class Pathfinding
 
 		startNode.gCost = 0;
 		startNode.hCost = GetDistance(startNode, endNode);
-		Debug.Log($"hCost: {startNode.hCost}");
 		startNode.GetFCost();
-		Debug.Log($"fCost: {startNode.fCost}");
 
 		while (openList.Count > 0)
 		{
@@ -159,10 +202,6 @@ public class Pathfinding
 			currentNode = currentNode.previousNode;
 		}
 		path.Reverse();
-		foreach (PathNode node in path)
-		{
-			Debug.Log($"{node.x} {node.y}");
-		}
 		return path;
 
 	}

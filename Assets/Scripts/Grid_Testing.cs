@@ -21,7 +21,7 @@ public class Grid_Testing : MonoBehaviour
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
-			Vector3 mouseWorldPostion = GetMouseWorldPosition();
+			Vector3 mouseWorldPostion = GetWorldPosition.GetMouseWorldPosition();
 			pathfinding.Grid.GetXY(mouseWorldPostion, out int x, out int y);
 			List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
 			List<PathNode> path1 = pathfinding.FindPath(99, 99, x, y);
@@ -46,28 +46,7 @@ public class Grid_Testing : MonoBehaviour
 	}
 
 
-	public static Vector3 GetMouseWorldPosition()
-	{
-		Vector3 vec = GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);
-		vec.z = 0f;
-		return vec;
-	}
 
-	public static Vector3 GetMouseWorldPositionWithZ()
-	{
-		return GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);
-	}
-
-	public static Vector3 GetMouseWorldPositionWithZ(Camera worldCamera)
-	{
-		return GetMouseWorldPositionWithZ(Input.mousePosition, worldCamera);
-	}
-
-	public static Vector3 GetMouseWorldPositionWithZ(Vector3 screenPosition, Camera worldCamera)
-	{
-		Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
-		return worldPosition;
-	}
 
 
 
