@@ -2,16 +2,16 @@ using System;
 using UnityEngine;
 public class Grid<TGridObject>
 {
-    public bool debug = false;
+    public bool debug = true;
     public int Width { get; private set; }
     public int Height{ get; private set; }
-    private float cellSize;
+    public float CellSize { get; private set; }
     private TGridObject[,] gridArray;
     private Vector3 centerPosition;
     public Grid(int width, int height, float cellSize, Vector3 centerPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject) {
         Width = width;
         Height = height;
-        this.cellSize = cellSize;
+        this.CellSize = cellSize;
         gridArray = new TGridObject[width, height];
         this.centerPosition = centerPosition;
 
@@ -28,14 +28,14 @@ public class Grid<TGridObject>
 			{
 				for (int y = 0; y < gridArray.GetLength(1); y++)
 				{
-					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.red, 100f);
-					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.red, 100f);
+					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.red,1000f);
+					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.red, 1000f);
 
 				}
 
 			}
-			Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 100f);
-			Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 100f);
+			Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 1000f);
+			Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 1000f);
 		}
 		
 
@@ -57,12 +57,12 @@ public class Grid<TGridObject>
 
     public Vector3 GetWorldPosition(int x, int y)
     {
-        return new Vector3(x, y) * cellSize + centerPosition;
+        return new Vector3(x, y) * CellSize + centerPosition;
     }
 
     public void GetXY(Vector3 worldPosition,out int x, out int y)
     {
-        x = Mathf.FloorToInt((worldPosition - centerPosition).x / cellSize);
-		y = Mathf.FloorToInt((worldPosition - centerPosition).y / cellSize);
+        x = Mathf.FloorToInt((worldPosition - centerPosition).x / CellSize);
+		y = Mathf.FloorToInt((worldPosition - centerPosition).y / CellSize);
 	}
 }

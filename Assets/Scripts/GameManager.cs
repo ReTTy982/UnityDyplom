@@ -15,16 +15,13 @@ public class GameManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
+		Pathfinding pathfinding = new Pathfinding(width, height,cellSize);
 		MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
 		mapGrid = new MapGrid(width, height, cellSize, scale, waterLevel);
 		Mesh mesh = new Mesh();
 		List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();
 		mapGrid.DrawTerrainMesh(out vertices, out triangles);
-		foreach (Vector3 i in vertices.ToArray())
-		{
-			Debug.Log(i);
-		}
 		mesh.vertices = vertices.ToArray();
 		mesh.triangles = triangles.ToArray();
 		mesh.RecalculateNormals();

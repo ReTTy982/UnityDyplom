@@ -62,7 +62,6 @@ public class MapGrid
 					Vector3 c = new Vector3(x+ cellSize,y);
 					Vector3 d = new Vector3(x, y);
 					Vector3[] v = new Vector3[] { a, c, d, a, b, c };
-					Debug.Log($"{a} {b} {c} {d} {v}");
 					for (int k =0; k < 6; k++)
 					{
 						vertices.Add(v[k]);
