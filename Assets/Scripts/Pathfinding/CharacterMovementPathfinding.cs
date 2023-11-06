@@ -1,7 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using Unity.Jobs;
 using UnityEngine;
+using Unity.Mathematics;
+using Unity.Collections;
+
+
 
 public class CharacterMovementPathfinding : MonoBehaviour
 {
