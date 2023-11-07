@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
 	public float cellSize;
 	public int mapChunkSize;
 	public float scale;
+	public int mapChunkCount;
 
 	private MapGrid mapGrid;
 	private Pathfinding pathfinding;
@@ -16,21 +18,23 @@ public class GameManager : MonoBehaviour
 	void Start()
 	{
 		
-		MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
-		mapGrid = new MapGrid(mapChunkSize, cellSize, scale, waterLevel);
-		Mesh mesh = new Mesh();
-		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-		List<Vector3> vertices = new List<Vector3>();
-		List<int> triangles = new List<int>();
-		mapGrid.DrawTerrainMesh(out vertices, out triangles);
-		mesh.vertices = vertices.ToArray();
-		mesh.triangles = triangles.ToArray();
-		mesh.RecalculateNormals();
+		//MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
+		mapGrid = new MapGrid(mapChunkCount, cellSize, scale, waterLevel);
+		mapGrid.DrawChunk();
 
-		MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
-		meshFilter.mesh = mesh;
+		//Mesh mesh = mapGrid.DrawTerrainMesh();
+
+		
+		//Debug.Log(mesh.triangles.Length);
+		//Debug.Log(mesh.vertices.Length);
+		//MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
+		//meshFilter.mesh = mesh;
+		//MeshData meshData = new MeshData();
+		//meshData.AddTriangles(mesh.vertices.ToList<Vector3>(), mesh.triangles.ToList<int>());
+		//Chunk chunk = new Chunk(new Vector3(mapChunkSize, 0, 0), meshData);
+
+
 		pathfinding = new Pathfinding(mapChunkSize, mapChunkSize, cellSize, mapGrid);
-		Debug.Log(mesh.vertexCount);
 
 	}
 

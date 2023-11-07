@@ -629,9 +629,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterLevel: 0.4
   cellSize: 1
-  width: 100
-  height: 100
+  mapChunkSize: 100
   scale: 0.1
+  mapChunkCount: 7
 --- !u!1 &774474838
 GameObject:
   m_ObjectHideFlags: 0
