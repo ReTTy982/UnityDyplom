@@ -24,7 +24,7 @@ public class MapTest : MonoBehaviour
 			}
 		}
 
-		mapGrid = new MapGrid(width,height,cellSize,scale,waterLevel);
+		mapGrid = new MapGrid(width,cellSize,scale,waterLevel);
     }
 	private void OnDrawGizmos()
 	{

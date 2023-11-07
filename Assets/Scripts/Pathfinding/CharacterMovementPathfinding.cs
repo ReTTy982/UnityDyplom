@@ -90,6 +90,7 @@ public class CharacterMovementPathfinding : MonoBehaviour
 	public void RunRandomly()
 	{
 		currentPathIndex = 0;
+		Debug.Assert(Pathfinding.Instance != null);
 		pathVectorList = Pathfinding.Instance.FindRandomPath(GetPosition());
 		if (pathVectorList != null && pathVectorList.Count > 1)
 		{

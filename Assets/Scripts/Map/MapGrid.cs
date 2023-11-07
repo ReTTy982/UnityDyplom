@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
@@ -9,15 +10,13 @@ public class MapGrid
 	public Material defaultMaterial;
 	public float waterLevel = .4f;
 	public float cellSize;
-	public int width, height;
 	public float scale;
+	public int mapChunkSize = 241;
 
 	public Grid<MapCell> Grid { private set; get; }
 
-	public MapGrid(int width, int height, float cellSize, float scale, float waterLevel) {
-		Grid = new Grid<MapCell>(width, height, cellSize, Vector3.zero, (Grid<MapCell> g, int x, int y) => new MapCell(g, x, y));
-		this.width = width;
-		this.height = height;
+	public MapGrid(int mapChunkSize, float cellSize, float scale, float waterLevel) {
+		Grid = new Grid<MapCell>(mapChunkSize,cellSize, Vector3.zero, (Grid<MapCell> g, int x, int y) => new MapCell(g, x, y));
 		this.scale = scale;
 		this.waterLevel = waterLevel;
 		this.cellSize = cellSize;
@@ -25,7 +24,7 @@ public class MapGrid
 	}
 	public void Start()
 	{
-		Grid = new Grid<MapCell>(width, height, cellSize, Vector3.zero, (Grid<MapCell> g, int x, int y) => new MapCell(g, x, y));
+		Grid = new Grid<MapCell>(mapChunkSize,cellSize, Vector3.zero, (Grid<MapCell> g, int x, int y) => new MapCell(g, x, y));
 		SetNoise();
 		//DrawTerrainMesh();
 	}
@@ -34,11 +33,13 @@ public class MapGrid
 
 	private void SetNoise()
 	{
+		float offsetX = UnityEngine.Random.Range(-10000f, 10000f);
+		float offsetY = UnityEngine.Random.Range(-10000f, 10000f);
 		for (int x = 0 ; x < Grid.Width; x++)
 		{
 			for( int y = 0 ; y < Grid.Height; y++)
 			{
-				Grid.GetGridObject(x, y).IsWater = Mathf.PerlinNoise(x * scale, y * scale) < waterLevel;
+				Grid.GetGridObject(x, y).IsWater = Mathf.PerlinNoise(x * scale +offsetX, y * scale + offsetY) < waterLevel;
 			}
 		}
 	}
@@ -54,7 +55,8 @@ public class MapGrid
 			for (int y= 0 ; y < Grid.Height;y++)
 			{
 				MapCell cell = Grid.GetGridObject(x, y);
-				if (!cell.IsWater)
+				//if (!cell.IsWater)
+				if(true)
 				{
 					Vector3 a = new Vector3(x, y + cellSize);
 					
@@ -62,6 +64,7 @@ public class MapGrid
 					Vector3 c = new Vector3(x+ cellSize,y);
 					Vector3 d = new Vector3(x, y);
 					Vector3[] v = new Vector3[] { a, c, d, a, b, c };
+
 					for (int k =0; k < 6; k++)
 					{
 						vertices.Add(v[k]);
@@ -91,15 +94,21 @@ public class MapGrid
 public class MapCell
 {
 	private Grid<MapCell> grid;
+	public PathNode PathNode { get; set; }
 	int x;
 	int y;
-	public bool IsWater { get; set; }
+	private bool isWater;
+	public bool IsWater {
+		get { return isWater; } 
+		set{ isWater = value;
+			PathNode.IsWalkable = !value;
+		} }
 	public MapCell(Grid<MapCell> grid, int x, int y)
 	{
 		this.grid = grid;
 		this.x = x;
 		this.y = y;
-		IsWater = true;
+		PathNode = new PathNode(x, y,IsWater);
 
 	}
 }

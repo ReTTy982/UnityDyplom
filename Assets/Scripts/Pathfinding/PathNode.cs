@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class PathNode
 {
-    private Grid<PathNode> grid;
-    public int x { private set; get; }
-    public int y { private set; get; }
+	private Grid<PathNode> grid;
+	public int x { private set; get; }
+	public int y { private set; get; }
 
-	public bool IsWalkable = true;
+	public bool IsWalkable { set; get; }
 
 	public int gCost;
 	public int hCost;
@@ -17,11 +17,20 @@ public class PathNode
 
 	public PathNode previousNode;
 
-    public PathNode(Grid<PathNode> grid, int x, int y)
+	public PathNode(Grid<PathNode> grid, int x, int y)
 	{
 		this.grid = grid;
 		this.x = x;
 		this.y = y;
+	}
+	
+
+	public PathNode(int x, int y,bool isWalkable)
+	{
+		this.x = x;
+		this.y=y;
+		IsWalkable = !isWalkable;
+
 	}
 
 	public override string ToString()

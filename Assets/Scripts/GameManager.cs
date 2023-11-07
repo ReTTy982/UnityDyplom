@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
 	public float waterLevel = .4f;
 	public float cellSize;
-	public int width, height;
+	public int mapChunkSize;
 	public float scale;
 
 	private MapGrid mapGrid;
@@ -15,10 +15,11 @@ public class GameManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		Pathfinding pathfinding = new Pathfinding(width, height,cellSize);
+		
 		MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
-		mapGrid = new MapGrid(width, height, cellSize, scale, waterLevel);
+		mapGrid = new MapGrid(mapChunkSize, cellSize, scale, waterLevel);
 		Mesh mesh = new Mesh();
+		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 		List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();
 		mapGrid.DrawTerrainMesh(out vertices, out triangles);
@@ -28,6 +29,9 @@ public class GameManager : MonoBehaviour
 
 		MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
 		meshFilter.mesh = mesh;
+		pathfinding = new Pathfinding(mapChunkSize, mapChunkSize, cellSize, mapGrid);
+		Debug.Log(mesh.vertexCount);
+
 	}
 
 

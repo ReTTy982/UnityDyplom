@@ -12,7 +12,6 @@ public class Grid_Testing : MonoBehaviour
 
 	private void Start()
 	{
-		pathfinding = new Pathfinding(width, height, cellSize);
 
 		
 	}

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Pathfinding
 {
-	public Grid<PathNode> Grid { private set; get; }
+	public Grid<MapCell> Grid { private set; get; }
 	private List<PathNode> openList;
 	private List<PathNode> closedList;
 
@@ -14,10 +14,11 @@ public class Pathfinding
 	private int diagonal = 14;
 
 	public static Pathfinding Instance { get; private set; } // SIngleton for single unit ??
-	public Pathfinding(int width, int height, float cellSize) 
+	public Pathfinding(int width, int height, float cellSize, MapGrid grid) 
 	{
 		Instance = this;
-		Grid = new Grid<PathNode>(width, height,cellSize,Vector3.zero,(Grid<PathNode> g, int x, int y) => new PathNode(g,x,y));
+		//Grid = new Grid<PathNode>(width, height,cellSize,Vector3.zero,(Grid<PathNode> g, int x, int y) => new PathNode(g,x,y));
+		Grid = grid.Grid;
 
 	}
 
@@ -47,6 +48,7 @@ public class Pathfinding
 		
 		Grid.GetXY(startWorldPosition, out int startX, out int startY);
 		Grid.GetXY(endWorldPosition, out int endX, out int endY);
+		Debug.Log($"{endX} {endY}");
 		List<PathNode> path = FindPath(startX,startY,endX,endY);
 		if (path == null)
 		{
@@ -67,8 +69,8 @@ public class Pathfinding
 	public List<PathNode> FindPath(int startX, int startY, int endX, int endY)
 	{
 		if (endX < 0 || endY < 0) return null;
-		PathNode startNode = Grid.GetGridObject(startX, startY);
-		PathNode endNode = Grid.GetGridObject(endX, endY);
+		PathNode startNode = Grid.GetGridObject(startX, startY).PathNode;
+		PathNode endNode = Grid.GetGridObject(endX, endY).PathNode;
 
 		openList = new List<PathNode>{startNode};
 		closedList = new List<PathNode>();
@@ -78,7 +80,7 @@ public class Pathfinding
 		{
 			for (int y = 0; y<Grid.Height; y++)
 			{
-				PathNode pathNode = Grid.GetGridObject(x, y);
+				PathNode pathNode = Grid.GetGridObject(x, y).PathNode;
 				pathNode.gCost = int.MaxValue;
 				pathNode.GetFCost();
 				pathNode.previousNode = null;
@@ -106,6 +108,11 @@ public class Pathfinding
 			{
 				if (closedList.Contains(neighbour))
 				{
+					continue;
+				}
+				if (!neighbour.IsWalkable)
+				{
+					closedList.Add(neighbour);
 					continue;
 				}
 				if (!neighbour.IsWalkable)
@@ -188,7 +195,7 @@ public class Pathfinding
 
 	private PathNode GetNode(int x, int y)
 	{
-		return Grid.GetGridObject(x, y);
+		return Grid.GetGridObject(x, y).PathNode;
 	}
 
 	private List<PathNode> GetPath(PathNode endNode)
