@@ -8,11 +8,11 @@ public class Grid<TGridObject>
     public float CellSize { get; private set; }
     private TGridObject[,] gridArray;
     private Vector3 centerPosition;
-    public Grid(int mapChunksize, float cellSize, Vector3 centerPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject) {
-        Width = mapChunksize;
-        Height = mapChunksize;
+    public Grid(int width, int height, float cellSize, Vector3 centerPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject) {
+        Width = width;
+        Height = height;
         this.CellSize = cellSize;
-        gridArray = new TGridObject[mapChunksize, mapChunksize];
+        gridArray = new TGridObject[width, height];
         this.centerPosition = centerPosition;
 
 		for (int x = 0; x < gridArray.GetLength(0); x++)
@@ -34,8 +34,8 @@ public class Grid<TGridObject>
 				}
 
 			}
-			Debug.DrawLine(GetWorldPosition(0, mapChunksize), GetWorldPosition(mapChunksize, mapChunksize), Color.red, 1000f);
-			Debug.DrawLine(GetWorldPosition(mapChunksize, 0), GetWorldPosition(mapChunksize, mapChunksize), Color.red, 1000f);
+			Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 1000f);
+			Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 1000f);
 		}
 		
 

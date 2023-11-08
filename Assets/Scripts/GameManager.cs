@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 	public int mapChunkSize;
 	public float scale;
 	public int mapChunkCount;
+	public TerrainType[] regions;
+	public Material material;
 
 	private MapGrid mapGrid;
 	private Pathfinding pathfinding;
@@ -18,20 +20,10 @@ public class GameManager : MonoBehaviour
 	void Start()
 	{
 		
-		//MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
-		mapGrid = new MapGrid(mapChunkCount, cellSize, scale, waterLevel);
+
+		mapGrid = new MapGrid(mapChunkSize,mapChunkCount, cellSize, scale, waterLevel,material,regions);
 		mapGrid.DrawChunk();
 
-		//Mesh mesh = mapGrid.DrawTerrainMesh();
-
-		
-		//Debug.Log(mesh.triangles.Length);
-		//Debug.Log(mesh.vertices.Length);
-		//MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
-		//meshFilter.mesh = mesh;
-		//MeshData meshData = new MeshData();
-		//meshData.AddTriangles(mesh.vertices.ToList<Vector3>(), mesh.triangles.ToList<int>());
-		//Chunk chunk = new Chunk(new Vector3(mapChunkSize, 0, 0), meshData);
 
 
 		pathfinding = new Pathfinding(mapChunkSize, mapChunkSize, cellSize, mapGrid);
