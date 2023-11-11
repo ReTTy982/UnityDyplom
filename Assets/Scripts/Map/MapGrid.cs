@@ -22,6 +22,10 @@ public class MapGrid
 	private int width;
 	private int height;
 
+	int octaves = 30;
+	float persistance = 0.3f;
+	float lacunarity = 1;
+
 	public Grid<MapCell> Grid { private set; get; }
 
 	public MapGrid(int mapChunkSize,int chunkCount, float cellSize, float scale, float waterLevel,Material material,TerrainType[] regions) {
@@ -35,37 +39,74 @@ public class MapGrid
 		this.width = chunksPerLine * mapChunkSize;
 		this.height = (chunkCount / chunksPerLine) * mapChunkSize;
 		this.regions = regions;
-		SetNoise();
+		SetNoise(octaves,persistance,lacunarity);
 	}
 	public void Start()
 	{
 		Grid = new Grid<MapCell>(chunksPerLine * chunkCount, chunkCount / chunksPerLine, cellSize, Vector3.zero, (Grid<MapCell> g, int x, int y) => new MapCell(g, x, y));
-		SetNoise();
+		SetNoise(octaves,persistance,lacunarity);
 		//DrawTerrainMesh();
 	}
 
 
 
-	private void SetNoise()
+	private void SetNoise(int octaves, float persistance, float lacunarity)
 	{
+
+
+		float[,] noiseMap = new float[Grid.Width, Grid.Height];
 		float offsetX = UnityEngine.Random.Range(-10000f, 10000f);
 		float offsetY = UnityEngine.Random.Range(-10000f, 10000f);
-		for (int x = 0 ; x < Grid.Width; x++)
+		float maxNoiseHeight = float.MinValue;
+		float minNoiseHeight = float.MaxValue;
+
+
+		for (int x = 0; x < Grid.Width; x++)
 		{
-			for( int y = 0 ; y < Grid.Height; y++)
+			for (int y = 0; y < Grid.Height; y++)
 			{
-				float value = Mathf.PerlinNoise(x * scale + offsetX, y * scale + offsetY);
-				Grid.GetGridObject(x, y).IsWater = value < waterLevel;
-				for (int i  = 0; i < regions.Length; i++)
+				float amplitude = 1;
+				float frequency = 1;
+				float noiseHeight = 0;
+				for (int i = 0; i < octaves; i++)
 				{
-					if (regions[i].height >= value)
+					float value = Mathf.PerlinNoise(x * scale * frequency + offsetX, y * scale * frequency + offsetY) * 2 - 1;
+					noiseHeight += value * amplitude;
+					amplitude *= persistance;
+					frequency *= lacunarity;
+
+				}
+				if (noiseHeight > maxNoiseHeight)
+				{
+					maxNoiseHeight = noiseHeight;
+				}
+				else if (noiseHeight < minNoiseHeight)
+				{
+					minNoiseHeight = noiseHeight;
+				}
+				noiseMap[x, y] = noiseHeight;
+
+
+
+
+
+			}
+		}
+
+		for (int x = 0; x < Grid.Width; x++)
+		{
+			for (int y = 0; y < Grid.Height; y++)
+			{
+				noiseMap[x,y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[x,y]);
+				Grid.GetGridObject(x, y).IsWater = noiseMap[x, y] < waterLevel;
+				for (int region = 0; region < regions.Length; region++)
+				{
+					if (regions[region].height >= noiseMap[x, y])
 					{
-						Grid.GetGridObject(x, y).setTerrain(regions[i]);
+						Grid.GetGridObject(x, y).setTerrain(regions[region]);
 						break;
 					}
 				}
-
-
 			}
 		}
 	}
@@ -211,15 +252,15 @@ public class MapGrid
 		{
 			for (int y = 0; y < this.mapChunkSize; y++)
 			{
-				//colorMap[y * mapChunkSize + x] = Grid.GetGridObject(startX + x, startY + y).terrainType.color;
-				if(Grid.GetGridObject(startX + x, startY + y).IsWater)
-				{
-					colorMap[y * mapChunkSize + x] = Color.blue;
-				}
-				else
-				{
-					colorMap[y * mapChunkSize + x] = Color.red;
-				}
+				colorMap[y * mapChunkSize + x] = Grid.GetGridObject(startX + x, startY + y).terrainType.color;
+				//if(Grid.GetGridObject(startX + x, startY + y).IsWater)
+				//{
+				//	colorMap[y * mapChunkSize + x] = Color.blue;
+				//}
+				//else
+				//{
+				//	colorMap[y * mapChunkSize + x] = Color.red;
+				//}
 				
 
 			}
@@ -293,7 +334,7 @@ public class Chunk
 
 	public void PutTexture(Texture2D texture)
 	{
-		Material newMaterial = new Material(Shader.Find("Standard"));
+		Material newMaterial = new Material(Shader.Find("Unlit/Texture"));
 		newMaterial.SetFloat("_Glossiness", 0.0f);
 		newMaterial.SetFloat("_Metallic", 0.0f); 
 
