@@ -26,7 +26,7 @@ public class MapGrid
 	float persistance = 0.5f;
 	float lacunarity = 2;
 
-	public Grid<MapCell> Grid { private set; get; }
+	public Grid<MapCell> Grid { private set; get; }	
 
 	public MapGrid(int mapChunkSize,int chunkCount, float cellSize, float scale, float waterLevel,Material material,TerrainType[] regions) {
 		Grid = new Grid<MapCell>(chunksPerLine* mapChunkSize, (chunkCount/chunksPerLine) * mapChunkSize, cellSize, Vector3.zero, (Grid<MapCell> g, int x, int y) => new MapCell(g, x, y));
