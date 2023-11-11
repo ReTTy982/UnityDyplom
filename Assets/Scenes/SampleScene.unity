@@ -629,7 +629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterLevel: 0.4
   cellSize: 4
-  mapChunkSize: 100
+  mapChunkSize: 30
   scale: 0.1
   mapChunkCount: 8
   regions:

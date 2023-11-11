@@ -19,8 +19,8 @@ public class MapGrid
 	public int chunkCount;
 	public int mapChunkSize;
 	public int chunksPerLine = 4;
-	private int width;
-	private int height;
+	public int width;
+	public int height;
 
 	int octaves = 8;
 	float persistance = 0.5f;
@@ -246,7 +246,6 @@ public class MapGrid
 	public Texture2D DrawTexture(Chunk chunk)
 	{
 		Texture2D texture = new Texture2D(mapChunkSize, mapChunkSize);
-		Debug.Log($"{this.width} {this.height}");
 		Color[] colorMap = new Color[mapChunkSize * mapChunkSize];
 		int startX = chunk.Column * this.mapChunkSize;
 		int startY = chunk.Row * this.mapChunkSize;
@@ -257,7 +256,6 @@ public class MapGrid
 			for (int y = 0; y < this.mapChunkSize; y++)
 			{
 				colorMap[y * mapChunkSize + x] = Grid.GetGridObject(startX + x, startY + y).terrainType.color;
-				Debug.Log($"ColorMap[{y * mapChunkSize + x}] = {startX + x},{startY + y} -> {Grid.GetGridObject(startX + x, startY + y).terrainType.name}");
 				//if(Grid.GetGridObject(startX + x, startY + y).IsWater)
 				//{
 				//	colorMap[y * mapChunkSize + x] = Color.blue;

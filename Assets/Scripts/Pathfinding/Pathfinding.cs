@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Pathfinding
 {
-	public Grid<MapCell> Grid { private set; get; }
+	public Grid<GameSquare> Grid { private set; get; }
 	private List<PathNode> openList;
 	private List<PathNode> closedList;
 
@@ -14,7 +14,7 @@ public class Pathfinding
 	private int diagonal = 14;
 
 	public static Pathfinding Instance { get; private set; } // SIngleton for single unit ??
-	public Pathfinding(int width, int height, float cellSize, MapGrid grid) 
+	public Pathfinding(int width, int height, float cellSize, GameGrid grid) 
 	{
 		Instance = this;
 		//Grid = new Grid<PathNode>(width, height,cellSize,Vector3.zero,(Grid<PathNode> g, int x, int y) => new PathNode(g,x,y));
@@ -50,7 +50,7 @@ public class Pathfinding
 		
 		Grid.GetXY(startWorldPosition, out int startX, out int startY);
 		Grid.GetXY(endWorldPosition, out int endX, out int endY);
-		Debug.Log($"{endX} {endY} {Grid.GetGridObject(endX,endY).IsWater}");
+		Debug.Log($"{endX} {endY} {Grid.GetGridObject(endX,endY).isWalkable}");
 		List<PathNode> path = FindPath(startX,startY,endX,endY);
 		if (path == null)
 		{
@@ -61,7 +61,9 @@ public class Pathfinding
 			List<Vector3> vectorPath = new List<Vector3>();
 			foreach(PathNode pathNode in path) 
 			{
-				vectorPath.Add(new Vector3(pathNode.x, pathNode.y) * Grid.CellSize + Vector3.one * .5f);
+				//vectorPath.Add(new Vector3(pathNode.x, pathNode.y,0) * Grid.CellSize + Vector3.one * .5f);
+				vectorPath.Add(new Vector3(pathNode.x, pathNode.y, 0) * 2 + new Vector3(1,1,0));
+				
 			}
 			return vectorPath;
 		}
