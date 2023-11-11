@@ -22,20 +22,32 @@ public class Grid<TGridObject>
 				gridArray[x, y] = createGridObject(this,x, y);
 			}
 		}
-        if (debug)
+        if (debug && typeof(TGridObject) == typeof(GameSquare))
 		{
+            Debug.Log($"{typeof(TGridObject)}");
+            UnityEngine.Color color;
+            if (typeof(TGridObject) == typeof(GameSquare))
+            {
+                color = Color.yellow;
+                Debug.Log($"{gridArray.Length}");
+
+            }
+            else
+            {
+                color = Color.red;
+            }
 			for (int x = 0; x < gridArray.GetLength(0); x++)
 			{
 				for (int y = 0; y < gridArray.GetLength(1); y++)
 				{
-					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.red,1000f);
-					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.red, 1000f);
+					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), color,1000f);
+					Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), color, 1000f);
 
 				}
 
 			}
-			Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 1000f);
-			Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 1000f);
+			Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), color, 1000f);
+			Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), color, 1000f);
 		}
 		
 

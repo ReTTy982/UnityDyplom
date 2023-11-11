@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
 	private MapGrid mapGrid;
 	private Pathfinding pathfinding;
+	private GameGrid gameGrid;
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -25,8 +26,9 @@ public class GameManager : MonoBehaviour
 		mapGrid.DrawChunk();
 
 
-
-		pathfinding = new Pathfinding(mapChunkSize, mapChunkSize, cellSize, mapGrid);
+		gameGrid = new GameGrid(mapChunkSize, mapChunkCount, mapGrid.Grid);
+		pathfinding = new Pathfinding(mapChunkSize, mapChunkSize, cellSize, gameGrid);
+		
 
 	}
 

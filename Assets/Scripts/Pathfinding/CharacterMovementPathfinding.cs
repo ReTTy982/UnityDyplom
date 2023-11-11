@@ -44,14 +44,23 @@ public class CharacterMovementPathfinding : MonoBehaviour
 		{
 			
 			Vector3 targetPosition = pathVectorList[currentPathIndex];
-			if(Vector3.Distance(transform.position, targetPosition) > 1f) 
+			//Debug.Log($"TargetPosition: {targetPosition}");
+			Debug.Log($"{Vector3.Distance(transform.position, targetPosition)}\n" +
+				$" Index{currentPathIndex}\n" +
+				$"Character: {transform.position}\n" +
+				$"Destination: {targetPosition}");
+			if (Vector3.Distance(transform.position, targetPosition) > 0.01f) 
 			{
 
 				Vector3 moveDir = (targetPosition - transform.position).normalized;
+				//Debug.Log($"MoveDir: {moveDir}");
 				float distanceBefore = Vector3.Distance(transform.position, targetPosition);
 				//transform.position = transform.position + moveDir * speed * Time.deltaTime;
 				//rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-				rb.MovePosition(transform.position + moveDir * speed * Time.fixedDeltaTime);
+				//rb.MovePosition(transform.position + moveDir * speed * Time.fixedDeltaTime);
+				rb.MovePosition(Vector3.MoveTowards(transform.position,targetPosition, speed * Time.fixedDeltaTime));
+				Debug.Log("TAL");
+
 
 			}
 			else
