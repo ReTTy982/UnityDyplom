@@ -628,23 +628,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterLevel: 0.4
-  cellSize: 1
-  mapChunkSize: 16
+  cellSize: 4
+  mapChunkSize: 100
   scale: 0.1
-  mapChunkCount: 16
+  mapChunkCount: 8
   regions:
-  - height: 0.2
-    color: {r: 0.1215686, g: 0.5429282, b: 0.81960785, a: 0}
-    name: Water
+  - height: 0.3
+    color: {r: 0.1215686, g: 0.20392157, b: 0.81960785, a: 0}
+    name: Water Deep
   - height: 0.4
+    color: {r: 0.2236116, g: 0.47788584, b: 0.7075472, a: 1}
+    name: Water Shallow
+  - height: 0.45
     color: {r: 0.8490566, g: 0.8234061, b: 0.3003738, a: 1}
-    name: Land
-  - height: 0.6
+    name: Sand
+  - height: 0.55
     color: {r: 0.24973297, g: 0.8679245, b: 0.24973297, a: 1}
     name: Land
+  - height: 0.7
+    color: {r: 0.2042542, g: 0.509434, b: 0.23193361, a: 1}
+    name: Land 2
   - height: 0.8
-    color: {r: 1, g: 0.39565736, b: 0, a: 1}
-    name: Land
+    color: {r: 0.5849056, g: 0.31507653, b: 0.13519046, a: 1}
+    name: Rock
+  - height: 0.9
+    color: {r: 0.3773585, g: 0.19259524, b: 0.069419734, a: 1}
+    name: Rock 2
+  - height: 1
+    color: {r: 0.745283, g: 0.70919067, b: 0.68551975, a: 1}
+    name: Mountain
   material: {fileID: 2100000, guid: 31889147085fbf440a24b527ce3f9da2, type: 2}
 --- !u!1 &774474838
 GameObject:
