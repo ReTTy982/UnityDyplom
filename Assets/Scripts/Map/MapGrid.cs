@@ -22,9 +22,9 @@ public class MapGrid
 	private int width;
 	private int height;
 
-	int octaves = 30;
-	float persistance = 0.3f;
-	float lacunarity = 1;
+	int octaves = 8;
+	float persistance = 0.5f;
+	float lacunarity = 2;
 
 	public Grid<MapCell> Grid { private set; get; }
 
@@ -133,7 +133,7 @@ public class MapGrid
 
 				for (int y = 0; y < mapChunkSize; y++)
 				{
-					int chunkX = x + column * mapChunkSize;
+					int chunkX = x + column * mapChunkSize ;
 					int chunkY = y + row * mapChunkSize;
 
 					MapCell cell = Grid.GetGridObject(chunkX, chunkY);
@@ -144,7 +144,8 @@ public class MapGrid
 					//Vector3 c = new Vector3(chunkX + cellSize, chunkY); // bottom right
 					//Vector3 d = new Vector3(chunkX, chunkY); // bottom left
 					//Vector3[] v = new Vector3[] { a, c, d, a, b, c };
-
+					chunkX *= (int)cellSize;
+					chunkY *= (int)cellSize;
 
 					Vector3 a = new Vector3(chunkX, chunkY,0); // bottom left
 					Vector3 b = new Vector3(chunkX + cellSize, chunkY,0); // bottom right
@@ -160,12 +161,15 @@ public class MapGrid
 					//Vector3 d = new Vector3(chunkX + cellSize, chunkY - cellSize); top right
 					//Vector3[] v = new Vector3[] { a, b, c, b, d, c };
 
-
+					chunkX = x + column * mapChunkSize;
+					chunkY = y + row * mapChunkSize;
 
 					Vector2 uvA = new Vector2(chunkX / (float)mapChunkSize, chunkY / (float)mapChunkSize);
 					Vector2 uvB = new Vector2((chunkX + 1) / (float)mapChunkSize, chunkY / (float)mapChunkSize);
 					Vector2 uvC = new Vector2(chunkX / (float)mapChunkSize, (chunkY + 1) / (float)mapChunkSize);
 					Vector2 uvD = new Vector2((chunkX + 1) / (float)mapChunkSize , (chunkY + 1) / (float)mapChunkSize);
+
+
 					Vector2[] uv = new Vector2[] {uvC,uvB,uvA,uvC,uvD,uvB };
 
 					for (int k = 0; k < 6; k++)
@@ -253,6 +257,7 @@ public class MapGrid
 			for (int y = 0; y < this.mapChunkSize; y++)
 			{
 				colorMap[y * mapChunkSize + x] = Grid.GetGridObject(startX + x, startY + y).terrainType.color;
+				Debug.Log($"ColorMap[{y * mapChunkSize + x}] = {startX + x},{startY + y} -> {Grid.GetGridObject(startX + x, startY + y).terrainType.name}");
 				//if(Grid.GetGridObject(startX + x, startY + y).IsWater)
 				//{
 				//	colorMap[y * mapChunkSize + x] = Color.blue;
@@ -375,6 +380,7 @@ public class MapCell
 	{
 		this.terrainType = terrainType;
 	}
+
 }
 
 [Serializable]
