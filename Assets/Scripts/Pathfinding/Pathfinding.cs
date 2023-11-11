@@ -27,7 +27,9 @@ public class Pathfinding
 	{
 		Grid.GetXY(startWorldPosition, out int startX, out int startY);
 		int endX = UnityEngine.Random.Range(0, Grid.Width);
+		
 		int endY = UnityEngine.Random.Range(0, Grid.Height);
+		Debug.Log($"Pathfinding: END - {endX} {endY}");
 		List<PathNode> path = FindPath(startX, startY, endX, endY);
 		if (path == null)
 		{
@@ -48,7 +50,7 @@ public class Pathfinding
 		
 		Grid.GetXY(startWorldPosition, out int startX, out int startY);
 		Grid.GetXY(endWorldPosition, out int endX, out int endY);
-		Debug.Log($"{endX} {endY}");
+		Debug.Log($"{endX} {endY} {Grid.GetGridObject(endX,endY).IsWater}");
 		List<PathNode> path = FindPath(startX,startY,endX,endY);
 		if (path == null)
 		{
@@ -69,8 +71,10 @@ public class Pathfinding
 	public List<PathNode> FindPath(int startX, int startY, int endX, int endY)
 	{
 		if (endX < 0 || endY < 0) return null;
+		if (endX > Grid.Width || endY > Grid.Height) return null;
 		PathNode startNode = Grid.GetGridObject(startX, startY).PathNode;
 		PathNode endNode = Grid.GetGridObject(endX, endY).PathNode;
+		if (!endNode.IsWalkable) return null;
 
 		openList = new List<PathNode>{startNode};
 		closedList = new List<PathNode>();
