@@ -27,8 +27,13 @@ public class Pathfinding
 	{
 		pathManager = _pathManager;
 	}
-	public void StartFindPath(Vector3 startPosition, Vector3 targetPosition,bool automate)
+	public void StartFindPath(PathRequest request, Action<PathResult> callback)
 	{
+		bool automate = request.automate;
+		Vector3 startPosition = request.pathStart;
+		Vector3 targetPosition = request.pathEnd;
+		//Action<List<Vector3>,bool> callback = request.callback;
+
 		List<Vector3> path;
 		if (!automate)
 		{
@@ -48,8 +53,8 @@ public class Pathfinding
 		{
 			succes = true;
 		}
+		callback(new PathResult(path, succes,request.callback));
 		
-		pathManager.FinishedProcessingPath(path, succes);
 	}
 	public List<Vector3> FindRandomPath(Vector3 startWorldPosition)
 	{
@@ -57,7 +62,6 @@ public class Pathfinding
 		int endX = UnityEngine.Random.Range(0, Grid.Width);
 		
 		int endY = UnityEngine.Random.Range(0, Grid.Height);
-		Debug.Log($"Pathfinding: END - {endX} {endY}");
 		List<PathNode> path = FindPath(startX, startY, endX, endY);
 		if (path == null)
 		{
