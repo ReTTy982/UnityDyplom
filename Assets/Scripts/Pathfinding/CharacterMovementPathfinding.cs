@@ -40,15 +40,16 @@ public class CharacterMovementPathfinding : MonoBehaviour
 	// Debug.Log($"");
 	private void HandleMovement()
 	{
+		//Debug.Log("Handle movement");
 		if(pathVectorList != null)
 		{
 			
 			Vector3 targetPosition = pathVectorList[currentPathIndex];
 			//Debug.Log($"TargetPosition: {targetPosition}");
-			Debug.Log($"{Vector3.Distance(transform.position, targetPosition)}\n" +
-				$" Index{currentPathIndex}\n" +
-				$"Character: {transform.position}\n" +
-				$"Destination: {targetPosition}");
+			//Debug.Log($"{Vector3.Distance(transform.position, targetPosition)}\n" +
+			//	$" Index{currentPathIndex}\n" +
+			//	$"Character: {transform.position}\n" +
+			//	$"Destination: {targetPosition}");
 			if (Vector3.Distance(transform.position, targetPosition) > 0.01f) 
 			{
 
@@ -59,13 +60,14 @@ public class CharacterMovementPathfinding : MonoBehaviour
 				//rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
 				//rb.MovePosition(transform.position + moveDir * speed * Time.fixedDeltaTime);
 				rb.MovePosition(Vector3.MoveTowards(transform.position,targetPosition, speed * Time.fixedDeltaTime));
-				Debug.Log("TAL");
 
 
 			}
 			else
 			{
+				Debug.Log(currentPathIndex);
 				currentPathIndex++;
+
 					if(currentPathIndex >= pathVectorList.Count) 
 				{
 					Stop();
@@ -77,6 +79,7 @@ public class CharacterMovementPathfinding : MonoBehaviour
 
 	private void Stop()
 	{
+		Debug.Log("STOPPED");
 		pathVectorList = null;
 	}
 
@@ -88,23 +91,42 @@ public class CharacterMovementPathfinding : MonoBehaviour
 	public void SetTargetPosition(Vector3 targetPosition)
 	{
 		currentPathIndex = 0;
-		pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
+		pathVectorList = null;
+		//pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
+		PathManager.RequestPath(GetPosition(), targetPosition,SetVectorList, automate);
 
-		if (pathVectorList != null && pathVectorList.Count > 1)
+		//if (pathVectorList != null && pathVectorList.Count > 1)
+		//{
+		//	pathVectorList.RemoveAt(0);
+		//}
+	}
+
+	private void SetVectorList(List<Vector3> _pathVectorList, bool succes)
+	{
+		if (succes && _pathVectorList.Count > 1)
 		{
+			pathVectorList = _pathVectorList;
+			//foreach(var path in pathVectorList)
+			//{
+			//	Debug.Log(path);
+			//}
 			pathVectorList.RemoveAt(0);
+		}
+		else
+		{
+			if (automate)
+			{
+				RunRandomly();
+			}
 		}
 	}
 
 	public void RunRandomly()
 	{
 		currentPathIndex = 0;
-		Debug.Assert(Pathfinding.Instance != null);
-		pathVectorList = Pathfinding.Instance.FindRandomPath(GetPosition());
-		if (pathVectorList != null && pathVectorList.Count > 1)
-		{
-			pathVectorList.RemoveAt(0);
-		}
+		pathVectorList = null;
+		//pathVectorList = Pathfinding.Instance.FindRandomPath(GetPosition());
+		PathManager.RequestPath(GetPosition(), new Vector3(0,0,0), SetVectorList,automate);
 	}
 
 

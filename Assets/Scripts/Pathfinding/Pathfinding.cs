@@ -9,9 +9,9 @@ public class Pathfinding
 	public Grid<GameSquare> Grid { private set; get; }
 	private List<PathNode> openList;
 	private List<PathNode> closedList;
-
 	private int straight = 10;
 	private int diagonal = 14;
+	PathManager pathManager;
 
 	public static Pathfinding Instance { get; private set; } // SIngleton for single unit ??
 	public Pathfinding(int width, int height, float cellSize, GameGrid grid) 
@@ -23,6 +23,34 @@ public class Pathfinding
 	}
 
 
+	public void setManager(PathManager _pathManager)
+	{
+		pathManager = _pathManager;
+	}
+	public void StartFindPath(Vector3 startPosition, Vector3 targetPosition,bool automate)
+	{
+		List<Vector3> path;
+		if (!automate)
+		{
+			path = FindPath(startPosition, targetPosition);
+		}
+		else
+		{
+			path = FindRandomPath(startPosition);
+		}
+		bool succes;
+
+		if(path == null || path.Count() == 0)
+		{
+			succes = false;
+		}
+		else
+		{
+			succes = true;
+		}
+		
+		pathManager.FinishedProcessingPath(path, succes);
+	}
 	public List<Vector3> FindRandomPath(Vector3 startWorldPosition)
 	{
 		Grid.GetXY(startWorldPosition, out int startX, out int startY);
@@ -40,7 +68,7 @@ public class Pathfinding
 			List<Vector3> vectorPath = new List<Vector3>();
 			foreach (PathNode pathNode in path)
 			{
-				vectorPath.Add(new Vector3(pathNode.x, pathNode.y) * Grid.CellSize + Vector3.one * .5f);
+				vectorPath.Add(new Vector3(pathNode.x, pathNode.y, 0) * 2 + new Vector3(1, 1, 0));
 			}
 			return vectorPath;
 		}
@@ -50,7 +78,7 @@ public class Pathfinding
 		
 		Grid.GetXY(startWorldPosition, out int startX, out int startY);
 		Grid.GetXY(endWorldPosition, out int endX, out int endY);
-		Debug.Log($"{endX} {endY} {Grid.GetGridObject(endX,endY).isWalkable}");
+		//Debug.Log($"{endX} {endY} {Grid.GetGridObject(endX,endY).isWalkable}");
 		List<PathNode> path = FindPath(startX,startY,endX,endY);
 		if (path == null)
 		{

@@ -24,12 +24,10 @@ public class Grid<TGridObject>
 		}
         if (debug && typeof(TGridObject) == typeof(GameSquare))
 		{
-            Debug.Log($"{typeof(TGridObject)}");
             UnityEngine.Color color;
             if (typeof(TGridObject) == typeof(GameSquare))
             {
                 color = Color.yellow;
-                Debug.Log($"{gridArray.Length}");
 
             }
             else
