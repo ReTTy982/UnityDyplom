@@ -3,6 +3,7 @@ using Unity.Jobs;
 using UnityEngine;
 using Unity.Mathematics;
 using Unity.Collections;
+using System;
 
 
 
@@ -65,7 +66,6 @@ public class CharacterMovementPathfinding : MonoBehaviour
 			}
 			else
 			{
-				Debug.Log(currentPathIndex);
 				currentPathIndex++;
 
 					if(currentPathIndex >= pathVectorList.Count) 
@@ -79,7 +79,6 @@ public class CharacterMovementPathfinding : MonoBehaviour
 
 	private void Stop()
 	{
-		Debug.Log("STOPPED");
 		pathVectorList = null;
 	}
 
@@ -93,7 +92,8 @@ public class CharacterMovementPathfinding : MonoBehaviour
 		currentPathIndex = 0;
 		pathVectorList = null;
 		//pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
-		PathManager.RequestPath(GetPosition(), targetPosition,SetVectorList, automate);
+		Debug.Log("Requesting path");
+		PathManager.RequestPath(new PathRequest(GetPosition(), targetPosition, SetVectorList, automate));
 
 		//if (pathVectorList != null && pathVectorList.Count > 1)
 		//{
@@ -126,7 +126,7 @@ public class CharacterMovementPathfinding : MonoBehaviour
 		currentPathIndex = 0;
 		pathVectorList = null;
 		//pathVectorList = Pathfinding.Instance.FindRandomPath(GetPosition());
-		PathManager.RequestPath(GetPosition(), new Vector3(0,0,0), SetVectorList,automate);
+		PathManager.RequestPath(new PathRequest(GetPosition(), new Vector3(0, 0, 0), SetVectorList, automate));
 	}
 
 

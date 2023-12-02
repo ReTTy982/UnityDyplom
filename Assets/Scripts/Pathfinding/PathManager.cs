@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.VisualScripting;
+using System.Threading;
+using JetBrains.Annotations;
 
 public class PathManager 
 {
-    Queue<PathRequest> pathRequestQueue = new Queue<PathRequest>();
+    Queue<PathResult> results = new Queue<PathResult>();
     PathRequest currentPathRequest;
 
     public static PathManager instance;
@@ -19,46 +21,73 @@ public class PathManager
         instance = this;
     }
 
-	public static void RequestPath(Vector3 pathStart, Vector3 pathEnd, Action<List<Vector3>,bool> callback,bool automate)
+    public void Update()
     {
-        PathRequest newRquest = new PathRequest(pathStart,pathEnd,callback,automate);
-        instance.pathRequestQueue.Enqueue(newRquest);
-        instance.TryProcessNext();
-    }
-
-    void TryProcessNext()
-    {
-        if (!isProcessingPath && pathRequestQueue.Count > 0)
+        if (results.Count > 0)
         {
-            currentPathRequest = pathRequestQueue.Dequeue();
-            isProcessingPath = true;
+            int itemsInQueue = results.Count;
+            lock(results) {
+                for(int i =0; i < itemsInQueue; i++)
+                {
+                    PathResult result = results.Dequeue();
+                    result.callback(result.path, result.succes);
+                }
+            }
 
-            pathfinding.StartFindPath(currentPathRequest.pathStart,currentPathRequest.pathEnd,currentPathRequest.automate);
         }
     }
 
-    public void FinishedProcessingPath(List<Vector3> path, bool succes)
+	public static void RequestPath(PathRequest request)
     {
-        Debug.Log("Finished");
-        currentPathRequest.callback(path, succes);
-        isProcessingPath = false;
-        TryProcessNext();
-    }
-
-    struct PathRequest 
-    {
-        public Vector3 pathStart;
-        public Vector3 pathEnd;
-        public Action<List<Vector3>, bool> callback;
-        public bool automate;
-
-        public PathRequest(Vector3 _start, Vector3 _end, Action<List<Vector3>,bool> _callback,bool _automate)
+        ThreadStart threadStart = delegate
         {
-            pathStart = _start;
-            pathEnd = _end;
-            callback = _callback;
-            automate = _automate;
-        }
+            instance.pathfinding.StartFindPath(request, instance.FinishedProcessingPath);
+        };
+        threadStart.Invoke();
     }
 
+
+    public void FinishedProcessingPath(PathResult result)
+    {
+        lock (results)
+        {
+			results.Enqueue(result);
+		}
+        
+    }
+
+    
+
+
+
+
+}
+public struct PathRequest
+{
+	public Vector3 pathStart;
+	public Vector3 pathEnd;
+	public Action<List<Vector3>, bool> callback;
+	public bool automate;
+
+	public PathRequest(Vector3 _start, Vector3 _end, Action<List<Vector3>, bool> _callback, bool _automate)
+	{
+		pathStart = _start;
+		pathEnd = _end;
+		callback = _callback;
+		automate = _automate;
+	}
+}
+
+public struct PathResult
+{
+	public List<Vector3> path;
+	public bool succes;
+	public Action<List<Vector3>, bool> callback;
+
+	public PathResult(List<Vector3> _path, bool _succes, Action<List<Vector3>, bool> _callback)
+	{
+		path = _path;
+		succes = _succes;
+		callback = _callback;
+	}
 }
