@@ -8,11 +8,17 @@ public class PlayerMovemnt : MonoBehaviour
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
 
+	private Inventory inventory;
+
     Vector2 movement;
 
+	public void Start()
+	{
+		inventory = new Inventory();
+	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
